@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useProduct } from "../../hooks/useProduct";
-import Header from "../../components/Header";
+import Header from "../../components/layout/Header";
 
 export default function ProductDetail() {
   const router = useRouter();

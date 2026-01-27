@@ -22,6 +22,15 @@
     "paths": {
       "@/*": [
         "components/*"
+      ],
+      "@/pages/*": [
+        "pages/*"
+      ],
+      "@/public/*": [
+        "public/*"
+      ],
+      "@/types/*": [
+        "types/*"
       ]
     }
   },

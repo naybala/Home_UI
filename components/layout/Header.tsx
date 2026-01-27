@@ -1,11 +1,10 @@
-import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import { useState } from "react";
 import MobileNav from "./MobileNav";
-import ThemeToggle from "./common/ThemeToggle";
-import { LanguageSwitcher } from "./common/LanguageSwitcher";
-import { NavLinks } from "./common/NavLinks";
-import Logo from "./../public/images/lucky_click.png";
+import ThemeToggle from "../common/ThemeToggle";
+import { LanguageSwitcher } from "../common/LanguageSwitcher";
+import { NavLinks } from "../common/NavLinks";
+import Logo from "@/public/images/lucky_click.png";
 
 export default function Header() {
   const { t } = useTranslation("common");
