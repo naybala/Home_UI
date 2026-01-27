@@ -9,6 +9,8 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { Seo } from "../components/Seo";
 
+import RootLayout from "../components/layout/RootLayout";
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
 
@@ -18,7 +20,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Seo favicon="/images/lucky_click.png" />
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <Component {...pageProps} />
+          <RootLayout>
+            <Component {...pageProps} />
+          </RootLayout>
         </ThemeProvider>
       </QueryClientProvider>
     </>

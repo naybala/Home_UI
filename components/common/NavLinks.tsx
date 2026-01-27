@@ -1,16 +1,24 @@
 import { useTranslation } from "next-i18next";
 import { useEffect, useRef, useState } from "react";
 import { NavLinksProps } from "../../types/MobileNavProps";
+import { useRouter } from "next/router";
 
 export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
   const { t } = useTranslation("common");
+  const router = useRouter();
   const [active, setActive] = useState<string>("home");
 
-  const sections = ["home", "tutorial", "our-info", "app-ui"];
+  const scrollSections = ["home", "tutorial", "our-info", "app-ui"];
+  const pageLinks = ["about"];
   const isScrolling = useRef(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleScrollTo = (sectionId: string, offset = -100) => {
+    if (router.pathname !== "/") {
+      router.push(`/#${sectionId}`);
+      return;
+    }
+
     const section = document.getElementById(sectionId);
     if (section) {
       const y =
@@ -31,7 +39,17 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
     }
   };
 
+  const handlePageNav = (page: string) => {
+    router.push(`/${page}`);
+    setActive(page);
+  };
+
   useEffect(() => {
+    if (router.pathname === "/about") {
+      setActive("about");
+      return;
+    }
+
     const observerOptions = {
       root: null,
       rootMargin: "-100px 0px 0px 0px",
@@ -48,21 +66,21 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
       });
     }, observerOptions);
 
-    sections.forEach((id) => {
+    scrollSections.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [router.pathname]);
 
-  const getButtonClass = (section: string) => {
-    return `${className} ${active === section ? "active" : ""}`;
+  const getButtonClass = (item: string) => {
+    return `${className} ${active === item ? "active" : ""}`;
   };
 
   return (
     <>
-      {sections?.map((section: any) => (
+      {scrollSections.map((section) => (
         <button
           className={getButtonClass(section)}
           onClick={() => {
@@ -72,6 +90,18 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
           key={section}
         >
           {t(section)}
+        </button>
+      ))}
+      {pageLinks.map((page) => (
+        <button
+          className={getButtonClass(page)}
+          onClick={() => {
+            handlePageNav(page);
+            onClick?.();
+          }}
+          key={page}
+        >
+          {t(page)}
         </button>
       ))}
     </>

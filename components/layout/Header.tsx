@@ -1,5 +1,6 @@
 import { useTranslation } from "next-i18next";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import MobileNav from "./MobileNav";
 import ThemeToggle from "../common/ThemeToggle";
 import { LanguageSwitcher } from "../common/LanguageSwitcher";
@@ -7,12 +8,18 @@ import { NavLinks } from "../common/NavLinks";
 import Logo from "@/public/images/lucky_click.png";
 
 export default function Header() {
+  const router = useRouter();
   const { t } = useTranslation("common");
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
   const style: string = "px-3 py-1 border rounded";
   const handleScrollTo = (sectionId: string) => {
+    if (router.pathname !== "/") {
+      router.push(`/#${sectionId}`);
+      closeSidebar();
+      return;
+    }
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
