@@ -1,8 +1,7 @@
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
+import { getI18nProps } from "@/utils/i18n";
 
-export default function About() {
+export default function Products() {
   const { t } = useTranslation("common");
 
   return (
@@ -10,15 +9,12 @@ export default function About() {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-8">{t("product")}</h1>
         <div className="prose dark:prose-invert">
-          <p>Welcome to Lucky Click. This is our product page.</p>
+          <p>{t("product-title")}</p>
+          <p>{t("product-description")}</p>
         </div>
       </div>
     </main>
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale || "en", ["common"])),
-  },
-});
+export const getStaticProps = getI18nProps(["common", "product"]);

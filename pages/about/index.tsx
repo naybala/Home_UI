@@ -1,6 +1,5 @@
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { GetStaticProps } from "next";
 import { useTranslation } from "next-i18next";
+import { getI18nProps } from "@/utils/i18n";
 
 export default function About() {
   const { t } = useTranslation("common");
@@ -17,8 +16,4 @@ export default function About() {
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale || "en", ["common"])),
-  },
-});
+export const getStaticProps = getI18nProps(["common"]);
