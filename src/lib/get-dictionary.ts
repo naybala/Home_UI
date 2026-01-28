@@ -3,23 +3,15 @@ import "server-only";
 const dictionaries = {
   en: {
     common: () =>
-      import("../../public/locales/en/common.json").then(
-        (module) => module.default,
-      ),
+      import("../locales/en/common.json").then((module) => module.default),
     product: () =>
-      import("../../public/locales/en/product.json").then(
-        (module) => module.default,
-      ),
+      import("../locales/en/product.json").then((module) => module.default),
   },
   mm: {
     common: () =>
-      import("../../public/locales/mm/common.json").then(
-        (module) => module.default,
-      ),
+      import("../locales/mm/common.json").then((module) => module.default),
     product: () =>
-      import("../../public/locales/mm/product.json").then(
-        (module) => module.default,
-      ),
+      import("../locales/mm/product.json").then((module) => module.default),
   },
 };
 
