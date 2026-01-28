@@ -3,7 +3,7 @@ import { useAuthStore } from "@/stores/auth";
 export async function tryRefreshToken(): Promise<boolean> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "/api"}/auth/refresh-token`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/refresh-token`,
       {
         method: "POST",
         credentials: "include",

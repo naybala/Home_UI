@@ -1,31 +1,38 @@
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { getI18nProps } from "@/utils/i18n";
+import { getI18nTranslations } from "@/utils/i18n";
 import { useProductDetail } from "@/features/products/queries/products.queries";
 import Link from "next/link";
 import Image from "next/image";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { ProductsAPI } from "@/features/products/api/products.api";
+import { Product } from "@/features/products/types/product.types";
 
-export default function ProductDetail() {
+interface ProductDetailPageProps {
+  initialProduct: Product;
+}
+
+export default function ProductDetail({
+  initialProduct,
+}: ProductDetailPageProps) {
   const { t } = useTranslation(["product"]);
   const router = useRouter();
   const { id } = router.query;
-  const { data: product, isLoading, isError } = useProductDetail(id as string);
+  const { data: product } = useProductDetail(id as string, initialProduct);
 
-  if (isLoading) {
+  if (router.isFallback) {
     return (
-      <div className="pt-32 min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="pt-32 min-h-screen flex items-center justify-center text-2xl font-bold">
+        Loading...
       </div>
     );
   }
 
-  if (isError || !product) {
+  if (!product) {
     return (
       <div className="pt-32 min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-500 text-xl mb-4">
-            Error loading product details.
-          </p>
+          <p className="text-red-500 text-xl mb-4">Product not found.</p>
           <Link href="/products" className="text-blue-500 hover:underline">
             Go back to products
           </Link>
@@ -112,4 +119,32 @@ export default function ProductDetail() {
   );
 }
 
-export const getServerSideProps = getI18nProps(["product"]);
+export const getStaticPaths: GetStaticPaths = async () => {
+  const products = await ProductsAPI.getProducts();
+  const paths = products.map((p) => ({
+    params: { id: p.id.toString() },
+  }));
+
+  return { paths, fallback: true };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
+  const id = params?.id as string;
+  try {
+    const product = await ProductsAPI.getProduct(id);
+
+    if (!product) {
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        ...(await getI18nTranslations(locale || "en", ["product"])),
+        initialProduct: product,
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    return { notFound: true };
+  }
+};

@@ -5,6 +5,7 @@ import MobileNav from "./MobileNav";
 import ThemeToggle from "../common/ThemeToggle";
 import { LanguageSwitcher } from "../common/LanguageSwitcher";
 import { NavLinks } from "./NavLinks";
+import Image from "next/image";
 import Logo from "@/public/images/lucky_click.png";
 
 export default function Header() {
@@ -38,10 +39,11 @@ export default function Header() {
               }}
               className="flex items-center cursor-pointer"
             >
-              <img
-                src={Logo.src}
+              <Image
+                src={Logo}
                 alt="Lucky Click Logo"
-                className="h-12 w-12 mr-2 rounded-sm shadow-lg"
+                className="h-12 w-12 mr-2 rounded-sm shadow-lg object-contain"
+                priority
               />
               {t("app-name")}
             </span>

@@ -1,30 +1,19 @@
 import { useTranslation } from "next-i18next";
-import { getI18nProps } from "@/utils/i18n";
+import { getI18nTranslations } from "@/utils/i18n";
 import { useProducts } from "@/features/products/queries/products.queries";
 import Link from "next/link";
 import Image from "next/image";
+import { ProductsAPI } from "@/features/products/api/products.api";
+import { ProductList } from "@/features/products/types/product.types";
+import { GetStaticProps } from "next";
 
-export default function Products() {
+interface ProductsPageProps {
+  initialProducts: ProductList;
+}
+
+export default function Products({ initialProducts }: ProductsPageProps) {
   const { t } = useTranslation(["product"]);
-  const { data: products, isLoading, isError } = useProducts();
-
-  if (isLoading) {
-    return (
-      <div className="pt-32 min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="pt-32 min-h-screen flex items-center justify-center">
-        <p className="text-red-500">
-          Error loading products. Please try again later.
-        </p>
-      </div>
-    );
-  }
+  const { data: products } = useProducts(initialProducts);
 
   return (
     <main className="pt-32 min-h-screen px-4 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -50,7 +39,9 @@ export default function Products() {
                   src={product.image}
                   alt={product.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className="object-contain transition-transform duration-500 group-hover:scale-110"
+                  priority={product.id <= 4}
                 />
                 <div className="absolute top-4 right-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-3 py-1 rounded-full text-sm font-semibold text-blue-600 dark:text-blue-400">
                   {product.category}
@@ -81,4 +72,14 @@ export default function Products() {
   );
 }
 
-export const getStaticProps = getI18nProps(["product"]);
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  const products = await ProductsAPI.getProducts();
+
+  return {
+    props: {
+      ...(await getI18nTranslations(locale || "en", ["product"])),
+      initialProducts: products,
+    },
+    revalidate: 60, // Refetch in background every 60 seconds
+  };
+};
