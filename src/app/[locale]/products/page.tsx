@@ -1,29 +1,26 @@
-import { useTranslation } from "next-i18next";
-import { getI18nTranslations } from "@/utils/i18n";
-import { useProducts } from "@/features/products/queries/products.queries";
+import { getDictionary } from "@/lib/get-dictionary";
+import { ProductsAPI } from "@/features/products/api/products.api";
 import Link from "next/link";
 import Image from "next/image";
-import { ProductsAPI } from "@/features/products/api/products.api";
-import { ProductList } from "@/features/products/types/product.types";
-import { GetStaticProps } from "next";
 
-interface ProductsPageProps {
-  initialProducts: ProductList;
-}
-
-export default function Products({ initialProducts }: ProductsPageProps) {
-  const { t } = useTranslation(["product"]);
-  const { data: products } = useProducts(initialProducts);
+export default async function ProductsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getDictionary(locale as any, "product");
+  const products = await ProductsAPI.getProducts();
 
   return (
     <main className="pt-32 min-h-screen px-4 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <header className="mb-12 text-center">
           <h1 className="text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
-            {t("product-title")}
+            {t["product-title"]}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-            {t("product-description")}
+            {t["product-description"]}
           </p>
         </header>
 
@@ -31,7 +28,7 @@ export default function Products({ initialProducts }: ProductsPageProps) {
           {products?.map((product) => (
             <Link
               key={product.id}
-              href={`/products/${product.id}`}
+              href={`/${locale}/products/${product.id}`}
               className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700 block"
             >
               <div className="relative aspect-square overflow-hidden bg-gray-100 p-8">
@@ -71,15 +68,3 @@ export default function Products({ initialProducts }: ProductsPageProps) {
     </main>
   );
 }
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const products = await ProductsAPI.getProducts();
-
-  return {
-    props: {
-      ...(await getI18nTranslations(locale || "en", ["product"])),
-      initialProducts: products,
-    },
-    revalidate: 60, // Refetch in background every 60 seconds
-  };
-};

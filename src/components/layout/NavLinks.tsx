@@ -1,12 +1,15 @@
 "use client";
-import { useTranslation } from "next-i18next";
 import { useEffect, useRef, useState } from "react";
 import { NavLinksProps } from "../../types/MobileNavProps";
-import { useRouter } from "next/router";
+import { useRouter, usePathname } from "next/navigation";
 
-export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
-  const { t } = useTranslation("common");
+export const NavLinks = ({
+  className = "",
+  onClick,
+  t,
+}: NavLinksProps & { t: any }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const [active, setActive] = useState<string>("home");
 
   const scrollSections = ["home", "tutorial", "our-info", "app-ui"];
@@ -15,7 +18,7 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleScrollTo = (sectionId: string, offset = -100) => {
-    if (router.pathname !== "/") {
+    if (pathname !== "/" && !pathname.match(/^\/[a-z]{2}\/?$/)) {
       router.push(`/#${sectionId}`);
       return;
     }
@@ -52,12 +55,12 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
     //   }
     // });
 
-    if (router.pathname === "/about") {
+    if (pathname.includes("/about")) {
       setActive("about");
       return;
     }
 
-    if (router.pathname === "/products") {
+    if (pathname.includes("/products")) {
       setActive("products");
       return;
     }
@@ -84,7 +87,7 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
     });
 
     return () => observer.disconnect();
-  }, [router.pathname]);
+  }, [pathname]);
 
   const getButtonClass = (item: string) => {
     return `${className} ${active === item ? "active" : ""}`;
@@ -101,7 +104,7 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
           }}
           key={section}
         >
-          {t(section)}
+          {t[section]}
         </button>
       ))}
       {pageLinks.map((page) => (
@@ -113,7 +116,7 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
           }}
           key={page}
         >
-          {t(page)}
+          {t[page]}
         </button>
       ))}
     </>

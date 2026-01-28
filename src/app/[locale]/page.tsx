@@ -1,8 +1,12 @@
-import { useTranslation } from "next-i18next";
-import { getI18nProps } from "@/utils/i18n";
+import { getDictionary } from "@/lib/get-dictionary";
 
-export default function Home() {
-  const { t } = useTranslation("common");
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getDictionary(locale as any, "common");
 
   return (
     <main className="pt-20">
@@ -11,8 +15,8 @@ export default function Home() {
         className="min-h-screen flex items-center justify-center"
       >
         <div className="text-center ">
-          <h1 className="text-4xl font-bold mb-4">{t("home")}</h1>
-          <p className="max-w-2xl px-4">{t("home-info")}</p>
+          <h1 className="text-4xl font-bold mb-4">{t.home}</h1>
+          <p className="max-w-2xl px-4">{t["home-info"]}</p>
         </div>
       </section>
 
@@ -20,24 +24,22 @@ export default function Home() {
         id="tutorial"
         className="min-h-screen flex items-center justify-center"
       >
-        <h2 className="text-3xl font-bold ">{t("app-tutorial")}</h2>
+        <h2 className="text-3xl font-bold ">{t["app-tutorial"]}</h2>
       </section>
 
       <section
         id="our-info"
         className="min-h-screen flex items-center justify-center"
       >
-        <h2 className="text-3xl font-bold">{t("our-info")}</h2>
+        <h2 className="text-3xl font-bold">{t["our-info"]}</h2>
       </section>
 
       <section
         id="app-ui"
         className="min-h-screen flex items-center justify-center"
       >
-        <h2 className="text-3xl font-bold">{t("app-ui")}</h2>
+        <h2 className="text-3xl font-bold">{t["app-ui"]}</h2>
       </section>
     </main>
   );
 }
-
-export const getStaticProps = getI18nProps(["common"]);

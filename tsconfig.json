@@ -20,36 +20,24 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/components/*": [
-        "components/*"
-      ],
-      "@/pages/*": [
-        "pages/*"
+      "@/*": [
+        "./src/*"
       ],
       "@/public/*": [
-        "public/*"
-      ],
-      "@/types/*": [
-        "types/*"
-      ],
-      "@/features/*": [
-        "features/*"
-      ],
-      "@/stores/*": [
-        "stores/*"
-      ],
-      "@/utils/*": [
-        "utils/*"
-      ],
-      "@/styles/*": [
-        "styles/*"
+        "./public/*"
       ]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

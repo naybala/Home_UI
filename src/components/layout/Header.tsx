@@ -1,6 +1,7 @@
-import { useTranslation } from "next-i18next";
+"use client";
+
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter, usePathname } from "next/navigation";
 import MobileNav from "./MobileNav";
 import ThemeToggle from "../common/ThemeToggle";
 import { LanguageSwitcher } from "../common/LanguageSwitcher";
@@ -8,15 +9,16 @@ import { NavLinks } from "./NavLinks";
 import Image from "next/image";
 import Logo from "@/public/images/lucky_click.png";
 
-export default function Header() {
+export default function Header({ t }: { t: any }) {
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
   const style: string = "px-3 py-1 border rounded";
+
   const handleScrollTo = (sectionId: string) => {
-    if (router.pathname !== "/") {
+    if (pathname !== "/" && !pathname.match(/^\/[a-z]{2}\/?$/)) {
       router.push(`/#${sectionId}`);
       closeSidebar();
       return;
@@ -45,12 +47,12 @@ export default function Header() {
                 className="h-12 w-12 mr-2 rounded-sm shadow-lg object-contain"
                 priority
               />
-              {t("app-name")}
+              {t["app-name"]}
             </span>
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <NavLinks className="px-3 py-1" />
+            <NavLinks className="px-3 py-1" t={t} />
             <LanguageSwitcher className={style} />
             <ThemeToggle />
           </div>
@@ -63,7 +65,7 @@ export default function Header() {
           </button>
         </div>
       </header>
-      <MobileNav isOpen={isOpen} closeSidebar={closeSidebar} />
+      <MobileNav isOpen={isOpen} closeSidebar={closeSidebar} t={t} />
     </>
   );
 }

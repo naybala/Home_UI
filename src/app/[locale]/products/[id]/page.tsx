@@ -1,51 +1,33 @@
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
-import { getI18nTranslations } from "@/utils/i18n";
-import { useProductDetail } from "@/features/products/queries/products.queries";
+import { getDictionary } from "@/lib/get-dictionary";
+import { ProductsAPI } from "@/features/products/api/products.api";
 import Link from "next/link";
 import Image from "next/image";
-import { GetStaticPaths, GetStaticProps } from "next";
-import { ProductsAPI } from "@/features/products/api/products.api";
-import { Product } from "@/features/products/types/product.types";
+import { notFound } from "next/navigation";
 
-interface ProductDetailPageProps {
-  initialProduct: Product;
-}
+export default async function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}) {
+  const { locale, id } = await params;
+  const t = await getDictionary(locale as any, "product");
 
-export default function ProductDetail({
-  initialProduct,
-}: ProductDetailPageProps) {
-  const { t } = useTranslation(["product"]);
-  const router = useRouter();
-  const { id } = router.query;
-  const { data: product } = useProductDetail(id as string, initialProduct);
-
-  if (router.isFallback) {
-    return (
-      <div className="pt-32 min-h-screen flex items-center justify-center text-2xl font-bold">
-        Loading...
-      </div>
-    );
+  let product;
+  try {
+    product = await ProductsAPI.getProduct(id);
+  } catch (error) {
+    notFound();
   }
 
   if (!product) {
-    return (
-      <div className="pt-32 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-500 text-xl mb-4">Product not found.</p>
-          <Link href="/products" className="text-blue-500 hover:underline">
-            Go back to products
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   return (
     <main className="pt-32 min-h-screen px-4 pb-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <Link
-          href="/products"
+          href={`/${locale}/products`}
           className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-8 transition-colors group"
         >
           <i className="pi pi-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
@@ -118,33 +100,3 @@ export default function ProductDetail({
     </main>
   );
 }
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const products = await ProductsAPI.getProducts();
-  const paths = products.map((p) => ({
-    params: { id: p.id.toString() },
-  }));
-
-  return { paths, fallback: true };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const id = params?.id as string;
-  try {
-    const product = await ProductsAPI.getProduct(id);
-
-    if (!product) {
-      return { notFound: true };
-    }
-
-    return {
-      props: {
-        ...(await getI18nTranslations(locale || "en", ["product"])),
-        initialProduct: product,
-      },
-      revalidate: 60,
-    };
-  } catch (error) {
-    return { notFound: true };
-  }
-};

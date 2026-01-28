@@ -1,17 +1,25 @@
-import { useRouter } from "next/router";
+"use client";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
+import { usePathname } from "next/navigation";
 import { LanguageSwitcherProps } from "../../types/MobileNavProps";
 
 export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
-  const router = useRouter();
-  const { t } = useTranslation("common");
-  const { locale, pathname, query, asPath } = router;
+  const pathname = usePathname();
+  const segments = pathname.split("/");
+  const locale = segments[1]; // assuming /[locale]/...
+
+  const getTargetLocale = () => (locale === "mm" ? "en" : "mm");
+  const getTargetHref = () => {
+    const targetLocale = getTargetLocale();
+    const newSegments = [...segments];
+    newSegments[1] = targetLocale;
+    return newSegments.join("/");
+  };
 
   return (
     <>
       {locale === "mm" ? (
-        <Link href={{ pathname, query }} as={asPath} locale="en">
+        <Link href={getTargetHref()}>
           <button className={className}>
             <img
               className="w-7 rounded-sm shadow-lg"
@@ -21,8 +29,8 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
           </button>
         </Link>
       ) : (
-        <Link href={{ pathname, query }} as={asPath} locale="mm">
-          <button className={className} disabled={locale === "mm"}>
+        <Link href={getTargetHref()}>
+          <button className={className}>
             <img
               className="w-7 rounded-sm shadow-lg"
               src="/images/Flag_of_Myanmar.svg.png"

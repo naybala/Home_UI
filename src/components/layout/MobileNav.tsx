@@ -4,7 +4,7 @@ import ThemeToggle from "../common/ThemeToggle";
 import { LanguageSwitcher } from "../common/LanguageSwitcher";
 import { NavLinks } from "./NavLinks";
 
-export default function MobileNav({ isOpen, closeSidebar }: MobileNavProps) {
+export default function MobileNav({ isOpen, closeSidebar, t }: MobileNavProps) {
   const style: string = "w-full text-left px-3 py-2 border rounded";
   return (
     <>
@@ -23,6 +23,7 @@ export default function MobileNav({ isOpen, closeSidebar }: MobileNavProps) {
           <NavLinks
             className="w-full text-left px-3 py-2"
             onClick={closeSidebar}
+            t={t}
           />
           <LanguageSwitcher className={style} />
 
