@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import MobileNav from "./MobileNav";
 import ThemeToggle from "../common/ThemeToggle";
 import { LanguageSwitcher } from "../common/LanguageSwitcher";
-import { NavLinks } from "../common/NavLinks";
+import { NavLinks } from "./NavLinks";
 import Logo from "@/public/images/lucky_click.png";
 
 export default function Header() {

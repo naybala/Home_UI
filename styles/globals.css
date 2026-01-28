@@ -2,16 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-body {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
 .theme-toggle-wrapper {
   cursor: pointer;
+}
+
+html,
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  overflow-y: scroll;
+  /* allow scrolling */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari */
 }
 
 .toggle {

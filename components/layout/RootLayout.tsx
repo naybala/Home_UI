@@ -8,7 +8,7 @@ interface RootLayoutProps {
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <>
-      <div>
+      <div className="bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
         <AppHeader />
         {children}
         <AppFooter />

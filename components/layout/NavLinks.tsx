@@ -1,3 +1,4 @@
+"use client";
 import { useTranslation } from "next-i18next";
 import { useEffect, useRef, useState } from "react";
 import { NavLinksProps } from "../../types/MobileNavProps";
@@ -9,7 +10,7 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
   const [active, setActive] = useState<string>("home");
 
   const scrollSections = ["home", "tutorial", "our-info", "app-ui"];
-  const pageLinks = ["about"];
+  const pageLinks = ["about", "products"];
   const isScrolling = useRef(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -45,8 +46,19 @@ export const NavLinks = ({ className = "", onClick }: NavLinksProps) => {
   };
 
   useEffect(() => {
+    // pageLinks.forEach((element) => {
+    //   if (router.pathname === element) {
+    //     setActive(element);
+    //   }
+    // });
+
     if (router.pathname === "/about") {
       setActive("about");
+      return;
+    }
+
+    if (router.pathname === "/products") {
+      setActive("products");
       return;
     }
 
