@@ -8,17 +8,27 @@ import { PropertyService } from "./properties.service";
 const isServer = typeof window === "undefined";
 
 export const PropertiesAPI = {
-  getProperties: async (page = 1, limit = 20): Promise<PropertyResponse> => {
+  getProperties: async (
+    page = 1,
+    limit = 20,
+    search?: string,
+  ): Promise<PropertyResponse> => {
     if (isServer) {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
       });
+      if (search) {
+        params.set("search", search);
+      }
       return PropertyService.getProperties(params);
     }
 
     // On client, we use our proxy to handle the secret token
-    const endpoint = `/properties?page=${page}&limit=${limit}`;
+    let endpoint = `/properties?page=${page}&limit=${limit}`;
+    if (search) {
+      endpoint += `&search=${encodeURIComponent(search)}`;
+    }
     return apiClient<PropertyResponse>(`/api${endpoint}`, false);
   },
 

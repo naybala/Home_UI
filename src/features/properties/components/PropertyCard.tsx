@@ -48,24 +48,19 @@ export default function PropertyCard({ property, locale }: PropertyCardProps) {
         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-1 group-hover:text-primary transition-colors">
           {property.location}
         </h3>
-
+        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-6 leading-relaxed">
+          {property.code || "No code available."}
+        </p>
         <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-6 leading-relaxed">
           {property.desc || "No description available."}
         </p>
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-              <i className="pi pi-user text-xs text-gray-500 dark:text-gray-400"></i>
-            </div>
+            <p>Created By -</p>
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
               {property.userFullName}
             </span>
-          </div>
-
-          <div className="flex items-center gap-1 text-primary font-semibold text-xs uppercase tracking-widest">
-            View Details
-            <i className="pi pi-arrow-right text-[10px]"></i>
           </div>
         </div>
       </div>

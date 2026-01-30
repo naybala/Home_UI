@@ -10,7 +10,8 @@ import {
 export const PROPERTY_KEYS = {
   all: ["properties"] as const,
   list: () => [...PROPERTY_KEYS.all, "list"] as const,
-  infinite: () => [...PROPERTY_KEYS.all, "infinite"] as const,
+  infinite: (search?: string) =>
+    [...PROPERTY_KEYS.all, "infinite", search || ""] as const,
   details: () => [...PROPERTY_KEYS.all, "detail"] as const,
   detail: (id: string | number) => [...PROPERTY_KEYS.details(), id] as const,
 };
@@ -32,11 +33,14 @@ export const useProperties = (initialData?: PropertyList) => {
   });
 };
 
-export const useInfiniteProperties = (initialData?: PropertyResponse) => {
+export const useInfiniteProperties = (
+  initialData?: PropertyResponse,
+  search?: string,
+) => {
   return useInfiniteQuery({
-    queryKey: PROPERTY_KEYS.infinite(),
+    queryKey: PROPERTY_KEYS.infinite(search),
     queryFn: async ({ pageParam = 1 }) => {
-      return await PropertiesAPI.getProperties(pageParam as number);
+      return await PropertiesAPI.getProperties(pageParam as number, 20, search);
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

@@ -7,10 +7,10 @@ export default async function PropertiesPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; search?: string }>;
 }) {
   const { locale } = await params;
-  const { page } = await searchParams;
+  const { page, search } = await searchParams;
   const currentPage = parseInt(page || "1");
   const t = await getDictionary(locale as any, "common");
 
@@ -18,7 +18,7 @@ export default async function PropertiesPage({
   let error = null;
 
   try {
-    propertiesData = await PropertiesAPI.getProperties(currentPage);
+    propertiesData = await PropertiesAPI.getProperties(currentPage, 20, search);
   } catch (e: any) {
     console.error("Failed to fetch properties:", e);
     error = e.message;
@@ -48,7 +48,11 @@ export default async function PropertiesPage({
             </div>
           </div>
         ) : (
-          <PropertiesClient initialData={propertiesData} locale={locale} />
+          <PropertiesClient
+            initialData={propertiesData}
+            locale={locale}
+            search={search}
+          />
         )}
       </div>
     </main>
