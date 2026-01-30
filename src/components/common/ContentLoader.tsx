@@ -10,14 +10,8 @@ interface ContentLoaderProps {
  * ContentLoader - Use this component to show loading state for specific content areas
  * This should be used in client components when fetching data with React Query
  *
- * Example usage:
- * ```tsx
  * const { data, isLoading } = useProducts();
  *
- * if (isLoading) {
- *   return <ContentLoader message="Loading products..." />;
- * }
- * ```
  */
 export default function ContentLoader({
   message = "Loading...",

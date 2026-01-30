@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   },
 };
 
+import { cookies } from "next/headers";
 import { getDictionary } from "@/lib/get-dictionary";
 
 export function generateStaticParams() {
@@ -31,8 +32,12 @@ export default async function RootLayout({
   const { locale } = await params;
   const t = await getDictionary(locale as any, "common");
 
+  // Read theme from cookie (Server-side)
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("theme")?.value ?? "light";
+
   return (
-    <html lang={locale}>
+    <html lang={locale} className={theme}>
       <body>
         <Providers>
           <RootLayoutComponent t={t}>{children}</RootLayoutComponent>

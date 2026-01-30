@@ -1,20 +1,18 @@
 .page-loader-overlay {
-    position: fixed;
-    top: 80px;
-    /* Below the header */
-    left: 0;
     width: 100%;
-    height: calc(100vh - 80px);
-    /* Full height minus header */
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(8px);
-    z-index: 50;
-    /* Lower z-index so it doesn't cover header */
+    min-height: 100vh;
+    /* Pushes footer down while staying in flow */
+    margin-top: 80px;
+    /* Offsets the fixed header */
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
     animation: fadeIn 0.2s ease-in;
+    padding: 4rem 0;
 }
+
 
 :global(.dark) .page-loader-overlay {
     background: rgba(17, 24, 39, 0.95);

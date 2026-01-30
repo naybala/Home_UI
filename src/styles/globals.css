@@ -71,10 +71,11 @@ body::-webkit-scrollbar {
   transform: translateX(30px);
 }
 
-button.active {
+.nav-link-item.active {
   color: #0070f3;
   border-bottom: 2px solid #0070f3;
 }
+
 
 
 @media screen and (max-width: 991px) {

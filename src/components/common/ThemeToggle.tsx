@@ -2,11 +2,11 @@ import React from "react";
 import { useThemeStore } from "@/stores/theme";
 
 const ThemeToggle: React.FC = () => {
-  const { isDark, toggleTheme } = useThemeStore();
+  const { isDark, toggle } = useThemeStore();
 
   return (
     <label className="switch" aria-label="Dark/Light Toggle">
-      <input type="checkbox" checked={isDark} onChange={toggleTheme} />
+      <input type="checkbox" checked={isDark} onChange={toggle} />
       <span className="slider">
         <div className="star star_1"></div>
         <div className="star star_2"></div>

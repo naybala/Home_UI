@@ -82,7 +82,7 @@ export const NavLinks = ({
   }, [pathname]);
 
   const getButtonClass = (item: string) => {
-    return `${className} ${active === item ? "active" : ""}`;
+    return `${className} nav-link-item ${active === item ? "active" : ""}`;
   };
 
   const segments = pathname.split("/");
@@ -106,7 +106,10 @@ export const NavLinks = ({
         <Link
           href={`/${locale}${page.href}`}
           className={getButtonClass(page.id)}
-          onClick={onClick}
+          onClick={() => {
+            setActive(page.id);
+            onClick?.();
+          }}
           key={page.id}
           prefetch={true}
         >
