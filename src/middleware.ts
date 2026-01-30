@@ -33,9 +33,12 @@ export function middleware(request: NextRequest) {
   if (pathnameHasLocale) return;
 
   // Redirect if there is no locale
-  const locale = defaultLocale;
-  request.nextUrl.pathname = `/${locale}${pathname}`;
-  return NextResponse.redirect(request.nextUrl);
+  // Try to get locale from cookie, fallback to default
+  const locale = request.cookies.get("NEXT_LOCALE")?.value || defaultLocale;
+
+  const url = request.nextUrl.clone();
+  url.pathname = `/${locale}${pathname}`;
+  return NextResponse.redirect(url);
 }
 
 export const config = {

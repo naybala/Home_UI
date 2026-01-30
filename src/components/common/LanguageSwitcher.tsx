@@ -13,6 +13,12 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
     const targetLocale = getTargetLocale();
     const newSegments = [...segments];
     newSegments[1] = targetLocale;
+
+    // Set cookie for middleware persistence
+    if (typeof document !== "undefined") {
+      document.cookie = `NEXT_LOCALE=${targetLocale}; path=/; max-age=31536000`; // 1 year
+    }
+
     return newSegments.join("/");
   };
 

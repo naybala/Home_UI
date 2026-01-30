@@ -21,8 +21,11 @@ export const NavLinks = ({
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleScrollTo = (sectionId: string, offset = -100) => {
-    if (pathname !== "/" && !pathname.match(/^\/[a-z]{2}\/?$/)) {
-      router.push(`/#${sectionId}`);
+    const segments = pathname.split("/");
+    const locale = segments[1] || "en";
+
+    if (pathname !== `/${locale}` && pathname !== `/${locale}/`) {
+      router.push(`/${locale}/#${sectionId}`);
       return;
     }
 

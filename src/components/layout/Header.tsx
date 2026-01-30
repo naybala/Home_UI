@@ -18,8 +18,11 @@ export default function Header({ t }: { t: any }) {
   const style: string = "px-3 py-1 border rounded";
 
   const handleScrollTo = (sectionId: string) => {
-    if (pathname !== "/" && !pathname.match(/^\/[a-z]{2}\/?$/)) {
-      router.push(`/#${sectionId}`);
+    const segments = pathname.split("/");
+    const locale = segments[1] || "en";
+
+    if (pathname !== `/${locale}` && pathname !== `/${locale}/`) {
+      router.push(`/${locale}/#${sectionId}`);
       closeSidebar();
       return;
     }
