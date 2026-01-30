@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { PropertiesAPI } from "../api/properties.api";
-import { Property, PropertyList } from "../types/property.types";
+import {
+  Property,
+  PropertyList,
+  PropertyDetail,
+} from "../types/property.types";
 
 export const PROPERTY_KEYS = {
   all: ["properties"] as const,
@@ -14,13 +18,17 @@ export const useProperties = (initialData?: PropertyList) => {
     queryKey: PROPERTY_KEYS.list(),
     queryFn: async () => {
       const response = await PropertiesAPI.getProperties();
-      return response.data.data;
+      return (
+        (response.data && Array.isArray(response.data.data)
+          ? response.data.data
+          : null) || []
+      );
     },
     initialData,
   });
 };
 
-export const usePropertyDetail = (id: string, initialData?: Property) => {
+export const usePropertyDetail = (id: string, initialData?: PropertyDetail) => {
   return useQuery({
     queryKey: PROPERTY_KEYS.detail(id),
     queryFn: async () => {

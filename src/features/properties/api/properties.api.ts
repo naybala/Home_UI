@@ -9,7 +9,6 @@ export async function propertiesApi<T>(
 ): Promise<T> {
   const baseUrl = process.env.NEXT_PUBLIC_PROPERTIES_API_URL || "";
   const token = process.env.NEXT_PER_TOKEN || "";
-  console.log(baseUrl, token, endpoint);
 
   const res = await fetch(`${baseUrl}${endpoint}`, {
     ...options,
@@ -18,10 +17,20 @@ export async function propertiesApi<T>(
       Authorization: `Bearer ${token}`,
       ...options.headers,
     },
-    next: { revalidate: 3600 }, // Cache properties for an hour by default
+    next: { revalidate: 3600 },
   });
 
-  console.log(res);
+  // Defensive: Log the actual response body for debugging
+  const clonedRes = res.clone();
+  try {
+    const json = await clonedRes.json();
+  } catch (e) {
+    console.log(
+      `API Response [${endpoint}] (not JSON):`,
+      await res.clone().text(),
+    );
+  }
+
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
     throw new Error(error.message || `API Error: ${res.status}`);
@@ -39,6 +48,6 @@ export const PropertiesAPI = {
   },
 
   getPropertyDetail: async (id: string): Promise<PropertyDetailResponse> => {
-    return propertiesApi<PropertyDetailResponse>(`/properties?id=${id}`);
+    return propertiesApi<PropertyDetailResponse>(`/properties/${id}`);
   },
 };

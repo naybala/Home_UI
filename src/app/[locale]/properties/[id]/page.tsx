@@ -17,6 +17,7 @@ export default async function PropertyDetailPage({
   try {
     const response = await PropertiesAPI.getPropertyDetail(id);
     propertyDetail = response.data;
+    console.log(propertyDetail);
   } catch (e: any) {
     console.error("Failed to fetch property details:", e);
     error = e.message;
@@ -76,7 +77,11 @@ export default async function PropertyDetailPage({
             {/* Gallery Mini (Simulated for Sample) */}
             <div className="mb-12 rounded-3xl overflow-hidden shadow-2xl bg-gray-100 dark:bg-gray-800 aspect-[16/9] relative group">
               <Image
-                src={propertyDetail.urlList[0] || propertyDetail.url}
+                src={
+                  (propertyDetail.urlList && propertyDetail.urlList[0]) ||
+                  propertyDetail.url ||
+                  ""
+                }
                 alt={propertyDetail.title}
                 fill
                 className="object-cover"
@@ -102,7 +107,7 @@ export default async function PropertyDetailPage({
                   {
                     icon: "pi-home",
                     label: "Size",
-                    value: `${propertyDetail.size} Rai`,
+                    value: `${propertyDetail.size} ${propertyDetail.dimension || "Rai"}`,
                   },
                   {
                     icon: "pi-slack",
@@ -146,12 +151,12 @@ export default async function PropertyDetailPage({
                   </div>
                   <div className="text-4xl font-black text-primary dark:text-white">
                     {propertyDetail.currencySymbol}
-                    {propertyDetail.price.toLocaleString()}
+                    {propertyDetail.price?.toLocaleString()}
                   </div>
                   {propertyDetail.lastPrice > 0 && (
                     <div className="text-gray-400 line-through text-sm">
                       {propertyDetail.currencySymbol}
-                      {propertyDetail.lastPrice.toLocaleString()}
+                      {propertyDetail.lastPrice?.toLocaleString()}
                     </div>
                   )}
                 </div>
@@ -169,12 +174,14 @@ export default async function PropertyDetailPage({
               {/* Agent info */}
               <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-3xl flex items-center gap-4 border border-gray-100 dark:border-gray-700">
                 <div className="relative w-16 h-16 rounded-full overflow-hidden shadow-inner">
-                  <Image
-                    src={propertyDetail.profileUrl}
-                    alt={propertyDetail.userFullName}
-                    fill
-                    className="object-cover"
-                  />
+                  {propertyDetail.profileUrl && (
+                    <Image
+                      src={propertyDetail.profileUrl}
+                      alt={propertyDetail.userFullName}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
                 </div>
                 <div>
                   <h4 className="font-bold dark:text-white">

@@ -1,19 +1,21 @@
 export interface Property {
   id: string;
   code: string;
-  price: string | number;
+  price: number;
   currencyCode: string;
-  lastPrice: string | number;
+  currencySymbol: string;
+  lastPrice: number;
   type: string;
   groupType: string;
   location: string;
-  url: string;
+  locationName: string;
   propertyStatus: string;
   createdAt: string;
   userFullName: string;
+  profileUrl: string;
   desc: string;
-  commissionFee: string | number;
-  commissionRate: number;
+  url: string;
+  urlList?: string[];
 }
 
 export type PropertyList = Property[];
@@ -25,12 +27,38 @@ export interface PropertyDetail extends Property {
   countryName: string;
   size: number;
   priceShort: string;
-  currencySymbol: string;
-  locationName: string;
+  pricePerSquare: string;
+  createdUser: string;
+  createdUserName: string;
+  phoneNumberPrefix: string;
+  countryCode: string;
+  locationId: string;
+  districtId: string;
   districtName: string;
+  address: string;
+  additional: any[];
+  dimension: string;
+  linkYoutube: string | null;
+  is_private: boolean;
   numBathroom: number;
   numBed: number;
+  numFav: number;
+  numRenew: number;
+  shareUrl: string | null;
   urlList: string[];
+  nearBy: any[];
+  view: number;
+  position: {
+    lat: number;
+    lng: number;
+  };
+  geolocation: {
+    coordinates: number[];
+    type: string;
+  };
+  commissionFee: number;
+  commissionRate: number;
+  extraPrice: number;
   userPhoneNumber: string;
   userEmail: string;
   userTelegram: string;
