@@ -25,7 +25,7 @@ export interface PropertyDetail extends Property {
   titleType: string;
   status: string;
   countryName: string;
-  size: number;
+  size: string | number;
   priceShort: string;
   pricePerSquare: string;
   createdUser: string;

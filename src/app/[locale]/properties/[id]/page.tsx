@@ -2,6 +2,9 @@ import { PropertiesAPI } from "@/features/properties/api/properties.api";
 import Image from "next/image";
 import { getDictionary } from "@/lib/get-dictionary";
 import Link from "next/link";
+import PropertyGallery from "@/features/properties/components/PropertyGallery";
+import YoutubePlayer from "@/features/properties/components/YoutubePlayer";
+import PropertyMap from "@/features/properties/components/PropertyMap";
 
 export default async function PropertyDetailPage({
   params,
@@ -54,7 +57,7 @@ export default async function PropertyDetailPage({
           <div className="lg:col-span-2">
             <header className="mb-8">
               <div className="flex flex-wrap items-center gap-2 mb-4">
-                <span className="bg-primary text-white px-3 py-1 rounded text-xs font-bold uppercase">
+                <span className="bg-primary text-white px-3 py-1 rounded text-xs font-bold uppercase transition-all hover:bg-primary/90">
                   {propertyDetail.groupType}
                 </span>
                 <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-3 py-1 rounded text-xs font-bold uppercase transition-colors">
@@ -63,8 +66,13 @@ export default async function PropertyDetailPage({
                 <span className="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-3 py-1 rounded text-xs font-bold uppercase">
                   {propertyDetail.propertyStatus}
                 </span>
+                {propertyDetail.status === "Already Sold" && (
+                  <span className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1 rounded text-xs font-bold uppercase">
+                    Sold
+                  </span>
+                )}
               </div>
-              <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
+              <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2 leading-tight">
                 {propertyDetail.title}
               </h1>
               <p className="text-lg text-gray-500 dark:text-gray-400 flex items-center gap-2">
@@ -74,20 +82,10 @@ export default async function PropertyDetailPage({
               </p>
             </header>
 
-            {/* Gallery Mini (Simulated for Sample) */}
-            <div className="mb-12 rounded-3xl overflow-hidden shadow-2xl bg-gray-100 dark:bg-gray-800 aspect-[16/9] relative group">
-              <Image
-                src={
-                  (propertyDetail.urlList && propertyDetail.urlList[0]) ||
-                  propertyDetail.url ||
-                  ""
-                }
-                alt={propertyDetail.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
+            {/* Gallery Section */}
+            <section className="mb-12">
+              <PropertyGallery images={propertyDetail.urlList} />
+            </section>
 
             <section className="mb-12">
               <h2 className="text-2xl font-bold mb-6 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">
@@ -97,6 +95,30 @@ export default async function PropertyDetailPage({
                 {propertyDetail.desc}
               </div>
             </section>
+
+            {/* Video Section */}
+            {propertyDetail.linkYoutube && (
+              <section className="mb-12">
+                <h2 className="text-2xl font-bold mb-6 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">
+                  Video Tour
+                </h2>
+                <YoutubePlayer url={propertyDetail.linkYoutube} />
+              </section>
+            )}
+
+            {/* Map Section */}
+            {propertyDetail.position && (
+              <section className="mb-12">
+                <h2 className="text-2xl font-bold mb-6 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">
+                  Location
+                </h2>
+                <PropertyMap
+                  lat={propertyDetail.position.lat}
+                  lng={propertyDetail.position.lng}
+                  locationName={propertyDetail.locationName}
+                />
+              </section>
+            )}
 
             <section>
               <h2 className="text-2xl font-bold mb-6 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">
