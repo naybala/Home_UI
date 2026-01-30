@@ -12,9 +12,9 @@ export const NavLinks = ({
   const pathname = usePathname();
   const [active, setActive] = useState<string>("home");
 
-  const scrollSections = ["home", "tutorial", "our-info", "app-ui"];
+  const scrollSections = ["home", "about-us", "our-services"];
   const pageLinks = [
-    { id: "about", href: "/about" },
+    { id: "categories", href: "/categories" },
     { id: "products", href: "/products" },
   ];
   const isScrolling = useRef(false);
@@ -50,20 +50,10 @@ export const NavLinks = ({
   };
 
   useEffect(() => {
-    if (pathname.includes("/about")) {
-      setActive("about");
-      return;
-    }
-
-    if (pathname.includes("/products")) {
-      setActive("products");
-      return;
-    }
-
     const observerOptions = {
       root: null,
-      rootMargin: "-100px 0px 0px 0px",
-      threshold: 0.3,
+      rootMargin: "-20% 0px -75% 0px",
+      threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
