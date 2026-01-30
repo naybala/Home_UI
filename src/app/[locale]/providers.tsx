@@ -40,27 +40,22 @@ export default function Providers({ children }: ProvidersProps) {
     }
   }, [isDark, mounted]);
 
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <PrimeReactProvider>{children}</PrimeReactProvider>
-      </QueryClientProvider>
-    );
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <PrimeReactProvider>
         {children}
-        <Toast
-          ref={(el) => {
-            if (typeof window !== "undefined") {
-              (window as any).toast = el;
-            }
-          }}
-        />
-        <ConfirmDialog />
+        {mounted && (
+          <>
+            <Toast
+              ref={(el) => {
+                if (typeof window !== "undefined") {
+                  (window as any).toast = el;
+                }
+              }}
+            />
+            <ConfirmDialog />
+          </>
+        )}
       </PrimeReactProvider>
     </QueryClientProvider>
   );

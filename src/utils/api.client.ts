@@ -1,30 +1,5 @@
 import { useAuthStore } from "@/stores/auth";
-
-export async function tryRefreshToken(): Promise<boolean> {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/refresh-token`,
-      {
-        method: "POST",
-        credentials: "include",
-      },
-    );
-
-    if (!res.ok) return false;
-
-    const data = await res.json();
-    const token = data?.data?.accessToken;
-
-    if (token) {
-      useAuthStore.getState().setToken(token);
-      return true;
-    }
-
-    return false;
-  } catch {
-    return false;
-  }
-}
+import { tryRefreshToken } from "./auth-refresh";
 
 export async function apiClient<T>(
   api: string,
@@ -33,8 +8,8 @@ export async function apiClient<T>(
 ): Promise<T> {
   const { token, clearAuthData } = useAuthStore.getState();
 
-  const headers: any = {
-    ...(options.headers || {}),
+  const headers: Record<string, string> = {
+    ...(options.headers as Record<string, string>),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
@@ -61,7 +36,9 @@ export async function apiClient<T>(
     }
 
     clearAuthData();
-    window.location.href = "/login";
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
     throw new Error("Session expired");
   }
 

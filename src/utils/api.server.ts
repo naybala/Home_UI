@@ -1,6 +1,6 @@
 export async function apiServer<T>(
   api: string,
-  options: RequestInit & { body?: any } = {},
+  options: RequestInit & { body?: any; next?: NextFetchRequestConfig } = {},
 ): Promise<T> {
   let body = options.body;
   if (body && typeof body === "object" && !(body instanceof FormData)) {
@@ -20,7 +20,10 @@ export async function apiServer<T>(
         Accept: "application/json",
         ...options.headers,
       },
-      cache: options.cache || "no-store",
+      // Use the provided cache or next.revalidate if present, otherwise default to no-store for safety
+      cache:
+        options.cache ||
+        (options.next?.revalidate !== undefined ? undefined : "no-store"),
     });
 
     if (res.status === 401) {

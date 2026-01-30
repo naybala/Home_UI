@@ -5,6 +5,7 @@ import ContentLoader from "@/components/common/ContentLoader";
 import Link from "next/link";
 import Image from "next/image";
 import { ProductList } from "../types/product.types";
+import { useEffect, useState } from "react";
 
 interface ProductsClientProps {
   locale: string;
@@ -17,15 +18,22 @@ export default function ProductsClient({
   t,
   initialData,
 }: ProductsClientProps) {
+  const [mounted, setMounted] = useState(false);
   const { data: products, isLoading, error } = useProducts(initialData);
 
-  // Show loading state while fetching data
-  if (isLoading) {
-    return <ContentLoader message="Loading products..." />;
-  }
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  // Show error state if something went wrong
-  if (error) {
+  // Use either the fetched data or the initial server-provided data
+  // This ensures that during hydration, we render exactly what the server did.
+  const displayProducts = products || initialData;
+
+  // We should NOT return early for isLoading or error during the first render (hydration)
+  // because the server-rendered HTML (which contains the list) must match the client-render.
+  // After mounting, it is safe to show error or loading states if no data is present.
+
+  if (mounted && error && !displayProducts) {
     return (
       <div className="pt-32 min-h-screen px-4 pb-20 bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -38,6 +46,11 @@ export default function ProductsClient({
         </div>
       </div>
     );
+  }
+
+  // Only show the loader if we are mounted, it's loading, AND we have no data at all
+  if (mounted && isLoading && !displayProducts) {
+    return <ContentLoader message="Loading products..." />;
   }
 
   return (
@@ -53,10 +66,11 @@ export default function ProductsClient({
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {products?.map((product) => (
+          {displayProducts?.map((product) => (
             <Link
               key={product.id}
               href={`/${locale}/products/${product.id}`}
+              prefetch={true}
               className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700 block"
             >
               <div className="relative aspect-square overflow-hidden bg-gray-100 p-8">

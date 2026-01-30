@@ -1,4 +1,4 @@
-"use client";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { NavLinksProps } from "../../types/MobileNavProps";
 import { useRouter, usePathname } from "next/navigation";
@@ -13,7 +13,10 @@ export const NavLinks = ({
   const [active, setActive] = useState<string>("home");
 
   const scrollSections = ["home", "tutorial", "our-info", "app-ui"];
-  const pageLinks = ["about", "products"];
+  const pageLinks = [
+    { id: "about", href: "/about" },
+    { id: "products", href: "/products" },
+  ];
   const isScrolling = useRef(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -43,18 +46,7 @@ export const NavLinks = ({
     }
   };
 
-  const handlePageNav = (page: string) => {
-    router.push(`/${page}`);
-    setActive(page);
-  };
-
   useEffect(() => {
-    // pageLinks.forEach((element) => {
-    //   if (router.pathname === element) {
-    //     setActive(element);
-    //   }
-    // });
-
     if (pathname.includes("/about")) {
       setActive("about");
       return;
@@ -93,6 +85,9 @@ export const NavLinks = ({
     return `${className} ${active === item ? "active" : ""}`;
   };
 
+  const segments = pathname.split("/");
+  const locale = segments[1] || "en";
+
   return (
     <>
       {scrollSections.map((section) => (
@@ -108,16 +103,15 @@ export const NavLinks = ({
         </button>
       ))}
       {pageLinks.map((page) => (
-        <button
-          className={getButtonClass(page)}
-          onClick={() => {
-            handlePageNav(page);
-            onClick?.();
-          }}
-          key={page}
+        <Link
+          href={`/${locale}${page.href}`}
+          className={getButtonClass(page.id)}
+          onClick={onClick}
+          key={page.id}
+          prefetch={true}
         >
-          {t[page]}
-        </button>
+          {t[page.id]}
+        </Link>
       ))}
     </>
   );

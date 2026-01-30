@@ -6,10 +6,29 @@ const defaultLocale = "en";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const refreshToken = request.cookies.get("refresh_token")?.value;
 
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );
+
+  // Define protected routes (without locale prefix)
+  const protectedRoutes = ["/dashboard", "/profile"]; // Add more as needed
+
+  // Get pathname without locale
+  const pathnameWithoutLocale = pathnameHasLocale
+    ? pathname.replace(/^\/(en|mm)/, "")
+    : pathname;
+
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathnameWithoutLocale.startsWith(route),
+  );
+
+  if (isProtectedRoute && !refreshToken) {
+    const locale = pathnameHasLocale ? pathname.split("/")[1] : defaultLocale;
+    const url = new URL(`/${locale}/login`, request.url);
+    return NextResponse.redirect(url);
+  }
 
   if (pathnameHasLocale) return;
 

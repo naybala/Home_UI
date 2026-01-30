@@ -43,7 +43,6 @@ export const useAuthStore = create<AuthState>()(
       name: "auth-storage",
       // Exclude functions from persistence as they cannot be serialized
       partialize: (state) => ({
-        token: state.token,
         userId: state.userId,
         name: state.name,
         roleId: state.roleId,
