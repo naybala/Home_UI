@@ -1,3 +1,4 @@
+// app/[locale]/providers.tsx
 "use client";
 
 import { PrimeReactProvider } from "primereact/api";
@@ -5,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { useRef } from "react";
+import ClientOnly from "@/components/layout/ClientOnly";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const queryClientRef = useRef(
@@ -20,19 +22,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClientRef.current}>
-      <PrimeReactProvider>
-        {children}
-
-        {/*  Always render – no structure change */}
-        <Toast
-          ref={(el) => {
-            if (el) {
-              (window as any).toast = el;
-            }
-          }}
-        />
-        <ConfirmDialog />
-      </PrimeReactProvider>
+      <ClientOnly>
+        <PrimeReactProvider>
+          {children}
+          <Toast ref={(el: any) => el && ((window as any).toast = el)} />
+          <ConfirmDialog />
+        </PrimeReactProvider>
+      </ClientOnly>
     </QueryClientProvider>
   );
 }

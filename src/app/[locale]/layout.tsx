@@ -37,8 +37,8 @@ export default async function RootLayout({
   const theme = cookieStore.get("theme")?.value ?? "light";
 
   return (
-    <html lang={locale} className={theme}>
-      <body>
+    <html lang={locale} className={theme} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Providers>
           <RootLayoutComponent t={t}>{children}</RootLayoutComponent>
         </Providers>
