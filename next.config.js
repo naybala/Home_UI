@@ -14,6 +14,10 @@ module.exports = {
         protocol: "https",
         hostname: "images2024.sgp1.cdn.digitaloceanspaces.com",
       },
+      {
+        protocol: "https",
+        hostname: "imagedelivery.net",
+      },
     ],
   },
 };

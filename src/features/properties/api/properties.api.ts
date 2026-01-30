@@ -7,17 +7,32 @@ export async function propertiesApi<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const baseUrl = process.env.NEXT_PUBLIC_PROPERTIES_API_URL || "";
-  const token = process.env.NEXT_PER_TOKEN || "";
+  const isServer = typeof window === "undefined";
+  const baseUrl = isServer
+    ? process.env.NEXT_PUBLIC_PROPERTIES_API_URL || ""
+    : ""; // Empty for relative calls on client
 
-  const res = await fetch(`${baseUrl}${endpoint}`, {
+  // On client, we prefix with /api to use our proxy
+  const finalEndpoint =
+    !isServer && endpoint.startsWith("/properties")
+      ? `/api${endpoint}`
+      : endpoint;
+
+  const token = isServer ? process.env.NEXT_PER_TOKEN || "" : "";
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(options.headers as Record<string, string>),
+  };
+
+  if (isServer && token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const res = await fetch(`${baseUrl}${finalEndpoint}`, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      ...options.headers,
-    },
-    next: { revalidate: 3600 },
+    headers,
+    next: isServer ? { revalidate: 3600 } : undefined,
   });
 
   // Defensive: Log the actual response body for debugging

@@ -1,5 +1,5 @@
 import { PropertiesAPI } from "@/features/properties/api/properties.api";
-import PropertyGrid from "@/features/properties/components/PropertyGrid";
+import PropertiesClient from "@/features/properties/components/PropertiesClient";
 import { getDictionary } from "@/lib/get-dictionary";
 
 export default async function PropertiesPage({
@@ -48,10 +48,7 @@ export default async function PropertiesPage({
             </div>
           </div>
         ) : (
-          <PropertyGrid
-            properties={propertiesData?.data?.data || []}
-            locale={locale}
-          />
+          <PropertiesClient initialData={propertiesData} locale={locale} />
         )}
       </div>
     </main>
