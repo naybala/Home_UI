@@ -1,7 +1,8 @@
 import { getDictionary } from "@/lib/get-dictionary";
 import Image from "next/image";
 import Link from "next/link";
-import Demo from "@/public/images/demo-two.jpg";
+import Demo from "@/public/images/demo.avif";
+import DemoTwo from "@/public/images/demo-two.jpg";
 
 export default async function Page({
   params,
@@ -42,7 +43,7 @@ export default async function Page({
               {t["home-info"]}
             </p>
             <Link
-              href="#"
+              href={`/${locale}/properties`}
               className="inline-block bg-[#2D4356] text-white px-8 py-3 rounded-lg font-semibold"
             >
               {t["hero-cta"]}
@@ -115,9 +116,10 @@ export default async function Page({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl group">
               <Image
-                src={Demo}
+                src={DemoTwo}
                 alt="Services Image"
                 fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

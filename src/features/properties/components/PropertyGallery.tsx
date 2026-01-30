@@ -53,6 +53,7 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
                 src={url}
                 alt={`Property image ${index + 1}`}
                 fill
+                sizes="(min-width: 1024px) 66vw, 100vw"
                 className="object-cover"
                 priority={index === 0}
               />
@@ -78,6 +79,7 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
                 src={url}
                 alt={`Thumbnail ${index + 1}`}
                 fill
+                sizes="(min-width: 1024px) 15vw, 20vw"
                 className="object-cover"
               />
             </button>

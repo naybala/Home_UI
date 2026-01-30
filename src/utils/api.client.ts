@@ -20,15 +20,20 @@ export async function apiClient<T>(
     body = JSON.stringify(body);
   }
 
-  const res = await fetch(
-    `${isFakeStore ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_PROPERTIES_API_URL}${api}`,
-    {
-      ...options,
-      body,
-      headers,
-      credentials: "include",
-    },
-  );
+  // Determine the base URL: Use empty string for local /api routes,
+  // otherwise choose between FakeStore and Properties API.
+  const baseUrl = api.startsWith("/api")
+    ? ""
+    : isFakeStore
+      ? process.env.NEXT_PUBLIC_BASE_URL
+      : process.env.NEXT_PUBLIC_PROPERTIES_API_URL;
+
+  const res = await fetch(`${baseUrl}${api}`, {
+    ...options,
+    body,
+    headers,
+    credentials: "include",
+  });
 
   if (res.status === 401 && !retrying) {
     const refreshed = await tryRefreshToken();

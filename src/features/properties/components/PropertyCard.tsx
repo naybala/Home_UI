@@ -20,6 +20,7 @@ export default function PropertyCard({ property, locale }: PropertyCardProps) {
           src={property.url}
           alt={property.location}
           fill
+          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           className="object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className="absolute top-4 left-4">

@@ -210,6 +210,7 @@ export default async function PropertyDetailPage({
                       src={propertyDetail.profileUrl}
                       alt={propertyDetail.userFullName}
                       fill
+                      sizes="64px"
                       className="object-cover"
                     />
                   )}

@@ -1,39 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { PropertyService } from "@/features/properties/api/properties.service";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const page = searchParams.get("page") || "1";
-  const limit = searchParams.get("limit") || "20";
-
-  const baseUrl = process.env.NEXT_PUBLIC_PROPERTIES_API_URL || "";
-  const token = process.env.NEXT_PER_TOKEN || "";
 
   try {
-    const res = await fetch(
-      `${baseUrl}/properties?page=${page}&limit=${limit}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    if (!res.ok) {
-      const error = await res.json().catch(() => ({}));
-      return NextResponse.json(
-        { message: error.message || "External API Error" },
-        { status: res.status },
-      );
-    }
-
-    const data = await res.json();
+    const data = await PropertyService.getProperties(searchParams);
     return NextResponse.json(data);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Property Proxy Error:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 },
+      { message: error.message || "Internal Server Error" },
+      { status: error.message === "Unauthorized" ? 401 : 500 },
     );
   }
 }
