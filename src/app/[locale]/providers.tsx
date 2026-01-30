@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { useThemeStore } from "@/stores/theme";
-import LoadingBar from "@/components/common/LoadingBar";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -53,7 +52,6 @@ export default function Providers({ children }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <PrimeReactProvider>
-        <LoadingBar />
         {children}
         <Toast
           ref={(el) => {
