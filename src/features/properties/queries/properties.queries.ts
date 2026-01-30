@@ -27,6 +27,8 @@ export const useProperties = (initialData?: PropertyList) => {
       );
     },
     initialData,
+    // staleTime: 0,
+    // refetchOnWindowFocus: true,
   });
 };
 
@@ -47,6 +49,8 @@ export const useInfiniteProperties = (initialData?: PropertyResponse) => {
           pageParams: [1],
         }
       : undefined,
+    // staleTime: 0,
+    // refetchOnWindowFocus: true,
   });
 };
 
@@ -59,5 +63,7 @@ export const usePropertyDetail = (id: string, initialData?: PropertyDetail) => {
     },
     enabled: !!id,
     initialData,
+    // staleTime: 0,
+    // refetchOnWindowFocus: true,
   });
 };

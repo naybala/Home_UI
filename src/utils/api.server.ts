@@ -1,5 +1,6 @@
 export async function apiServer<T>(
   api: string,
+  isFakeStore = false,
   options: RequestInit & { body?: any; next?: NextFetchRequestConfig } = {},
 ): Promise<T> {
   let body = options.body;
@@ -7,7 +8,7 @@ export async function apiServer<T>(
     body = JSON.stringify(body);
   }
 
-  const fullUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${api}`;
+  const fullUrl = `${isFakeStore ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_PROPERTIES_API_URL}${api}`;
 
   try {
     const res = await fetch(fullUrl, {
@@ -15,8 +16,6 @@ export async function apiServer<T>(
       body,
       headers: {
         "Content-Type": "application/json",
-        "User-Agent":
-          "Mozilla/5.0 (compatible; NextJS/14.0; +https://nextjs.org)",
         Accept: "application/json",
         ...options.headers,
       },

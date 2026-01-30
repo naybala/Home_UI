@@ -27,7 +27,7 @@ export default function PropertyMap({
         marginWidth={0}
         src={embedUrl}
         title={`Location of ${locationName}`}
-        className="grayscale dark:invert-[0.9] dark:hue-rotate-180"
+        className="w-full h-full border-0"
       ></iframe>
     </div>
   );

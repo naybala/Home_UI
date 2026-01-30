@@ -3,6 +3,7 @@ import { tryRefreshToken } from "./auth-refresh";
 
 export async function apiClient<T>(
   api: string,
+  isFakeStore = false,
   options: RequestInit & { body?: any } = {},
   retrying = false,
 ): Promise<T> {
@@ -20,7 +21,7 @@ export async function apiClient<T>(
   }
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL || "/api"}${api}`,
+    `${isFakeStore ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_PROPERTIES_API_URL}${api}`,
     {
       ...options,
       body,
@@ -32,7 +33,7 @@ export async function apiClient<T>(
   if (res.status === 401 && !retrying) {
     const refreshed = await tryRefreshToken();
     if (refreshed) {
-      return apiClient<T>(api, options, true);
+      return apiClient<T>(api, isFakeStore, options, true);
     }
 
     clearAuthData();
