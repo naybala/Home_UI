@@ -14,7 +14,7 @@ export const NavLinks = ({
 
   const scrollSections = ["home", "about-us", "our-services"];
   const pageLinks = [
-    { id: "categories", href: "/categories" },
+    { id: "properties", href: "/properties" },
     { id: "products", href: "/products" },
   ];
   const isScrolling = useRef(false);

@@ -35,7 +35,7 @@ export default function Header({ t }: { t: any }) {
 
   return (
     <>
-      <header className="bg-[#ece7e7f6] dark:bg-[#0f1114f5] text-black dark:text-white shadow p-4 fixed top-0 left-0 w-full z-50">
+      <header className="bg-[#ece7e7f5] dark:bg-[#0f1114f5] text-black dark:text-white shadow p-4 fixed top-0 left-0 w-full z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="text-xl font-bold">
             <span

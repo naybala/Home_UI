@@ -1,7 +1,6 @@
 import { getDictionary } from "@/lib/get-dictionary";
 import Image from "next/image";
 import Link from "next/link";
-import BackgroundHero from "@/public/images/demo-one.jpg";
 import Demo from "@/public/images/demo-two.jpg";
 
 export default async function Page({
@@ -13,31 +12,38 @@ export default async function Page({
   const t = await getDictionary(locale as any, "common");
 
   return (
-    <main className="overflow-x-hidden">
+    <main className="overflow-x-hidden pt-20">
       {/*  Hero Section */}
-      <section id="home" className="relative h-screen w-full flex items-center">
-        <div className="absolute inset-0 z-0">
+      <section
+        id="home"
+        className="relative h-[91vh] w-full grid grid-cols-1 md:grid-cols-3"
+      >
+        {/* Image → 2/3 */}
+        <div className="relative md:col-span-2">
           <Image
-            src={BackgroundHero}
+            src={Demo}
             alt="Hero Background"
             fill
-            className="object-cover object-center"
             priority
+            quality={100}
+            sizes="(min-width: 768px) 66vw, 100vw"
+            className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-black/30" />
         </div>
 
-        <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center">
-          <div className="bg-white dark:bg-gray-800 p-8 md:p-12 rounded-2xl shadow-2xl max-w-xl animate-fade-in-up">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 uppercase tracking-tight">
+        {/* Content → 1/3 */}
+        <div className="relative z-10 flex items-center justify-center bg-white/90 dark:bg-gray-900/90 px-8">
+          <div className="max-w-md">
+            <h1 className="text-4xl font-extrabold mb-6 dark:text-white">
               {t.home}
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 mb-8">
               {t["home-info"]}
             </p>
             <Link
               href="#"
-              className="inline-block bg-[#2D4356] hover:bg-[#1f2e3c] text-white px-8 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl active:scale-95"
+              className="inline-block bg-[#2D4356] text-white px-8 py-3 rounded-lg font-semibold"
             >
               {t["hero-cta"]}
             </Link>
