@@ -52,6 +52,15 @@ export default async function PropertyDetailPage({
   return (
     <main className="min-h-screen pt-32 pb-20 bg-white dark:bg-[#0f1114]">
       <div className="container mx-auto px-6">
+        <Link
+          href={`/${locale}/properties`}
+          className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-8 transition-colors group"
+        >
+          <i className="pi pi-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+          Back to Properties
+        </Link>
+        <br />
+        <br />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Column */}
           <div className="lg:col-span-2">

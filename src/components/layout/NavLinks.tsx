@@ -10,6 +10,8 @@ export const NavLinks = ({
 }: NavLinksProps & { t: any }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const segments = pathname.split("/");
+  const locale = segments[1] || "en";
   const [active, setActive] = useState<string>("home");
 
   const scrollSections = ["home", "about-us", "our-services"];
@@ -17,13 +19,31 @@ export const NavLinks = ({
     { id: "properties", href: "/properties" },
     { id: "products", href: "/products" },
   ];
+
+  // Sync active state with pathname
+  useEffect(() => {
+    const currentPage = pageLinks.find(
+      (page) =>
+        pathname === `/${locale}${page.href}` ||
+        pathname.startsWith(`/${locale}${page.href}/`),
+    );
+
+    if (currentPage) {
+      setActive(currentPage.id);
+    } else if (pathname === `/${locale}` || pathname === `/${locale}/`) {
+      const hash = window.location.hash.replace("#", "");
+      if (scrollSections.includes(hash)) {
+        setActive(hash);
+      } else if (window.scrollY < 100) {
+        setActive("home");
+      }
+    }
+  }, [pathname, locale]);
+
   const isScrolling = useRef(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleScrollTo = (sectionId: string, offset = -100) => {
-    const segments = pathname.split("/");
-    const locale = segments[1] || "en";
-
     if (pathname !== `/${locale}` && pathname !== `/${locale}/`) {
       router.push(`/${locale}/#${sectionId}`);
       return;
@@ -77,9 +97,6 @@ export const NavLinks = ({
   const getButtonClass = (item: string) => {
     return `${className} nav-link-item ${active === item ? "active" : ""}`;
   };
-
-  const segments = pathname.split("/");
-  const locale = segments[1] || "en";
 
   return (
     <>

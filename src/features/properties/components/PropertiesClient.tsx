@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { useInfiniteProperties } from "../queries/properties.queries";
 import { PropertyResponse } from "../types/property.types";
 import PropertyCard from "./PropertyCard";
-import ContentLoader from "@/components/common/ContentLoader";
+import InfiniteLoader from "@/components/common/InfiniteLoader";
 
 interface PropertiesClientProps {
   initialData: PropertyResponse;
@@ -93,7 +93,7 @@ export default function PropertiesClient({
       >
         {isFetchingNextPage ? (
           <div className="flex flex-col items-center gap-4">
-            <ContentLoader />
+            <InfiniteLoader />
             <p className="text-sm text-gray-500 animate-pulse">
               Loading more properties...
             </p>
